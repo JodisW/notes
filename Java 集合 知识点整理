@@ -1,0 +1,212 @@
+数组
+	- 优点：存取速度快
+	- 缺陷：
+		○ 元素个数固定
+		○ 不能动态扩容
+		○ 删除难
+
+类集：
+java对数据结构成熟的实现
+
+链表 linked list
+由一组不必相连的内存结构，按特定的顺序链接在一起的抽象数据类型。
+
+	- 缺点：
+		○ 查找慢
+	优点：
+		○ 空间没有限制
+			§ Data = null 即结束。
+		○ 插入删除元素快
+	- 结构：
+		○ 单链表
+		○ 双向链表
+		○ 循环链表（首尾相连）
+	- 操作：
+		○ 删除
+		○ 插入
+		○ 查找
+Class Node{
+	Object data;
+	Node next;
+}
+
+
+二叉树
+有序，便于查找
+	- 通常是有序的
+
+Class Node{
+	Object data;
+	Node left;
+	Node right;
+}
+	- 遍历方式：
+		○ 先序遍历：根，左，右
+		○ 中序遍历：左，根，右
+		○ 后序遍历：左，右，根
+
+队列 queue
+线性表
+	- 先进先出
+
+
+Collection 接口
+Java类集中保存单值的最大操作接口
+	- 每次操作时只能保存一个对象
+	- 常用子接口：
+		○ List（允许重复）
+		○ Set（不允许重复）
+
+
+List接口
+允许重复
+	- 获取数据：
+	Public E get(int index)
+	
+	- 删除指定位置：
+	Public E remove(int index)
+	
+	- 返回子集合：
+	- List<E> subList(int fromIndex, int toIndex)
+	
+实现类：
+	- ArrayList：线程安全，基于动态数组的实现
+	- Vector
+	- LinkedList
+
+
+ArrayList
+动态内存
+	- 构造方法：
+	ArrayList（）：初始容量为10，每次扩容为1.5倍
+	ArrayList（int initialCapacity）：指定初始容量
+	ArrayList（Collection<? Extends E> c): 集合的迭代器返回的顺序构造一个包含指定集合元素的列表
+
+创建方法：
+ArrayList<Integer> data = new ArrayList<>()
+
+Vector：
+数组结构，增加删除慢，查找快。
+	- 构造方法（与ArrayList相比较）
+	Vector（）：初始容量为10，标准容量增量为0
+		○ 要么指定增量，要么扩容x2
+	
+	
+LinkedList：
+双向链表结构，增加删除快，查找慢
+	- 先进后出
+	Data.addFirst(100);
+	data.removeLast（）；
+	（相当于：压栈、弹栈）
+Data.push(x);
+	Data.pop();
+	
+迭代器：
+
+Iterator
+相当于for loop
+  while(iterator.hasNext()){    //判断下一个数字是否存在
+        // 跳到下一个数字
+	Iterator.next();
+}
+
+	- 删除数据：要先获取数据，再删除
+	Iterator.next();
+	iterator.remove()
+	- 添加数据：
+		○ 该元素紧接在next（）返回的元素之前插入
+		○ 且在previous（）返回的元素之后插入
+		
+	
+	IteratorList
+	还可以向上走：
+		○ 需先next，再previous
+
+forEach
+增强For循环，用于迭代数组 或 集合Collection
+	- 结构
+	for（数据类型 变量名：集合或数组名）{}
+	For （String s：data）{}
+	
+
+Set集合
+不包含重复元素的集合
+	- 注意：
+		○ 没有get（）
+			§ 可转数组：toArray
+			§ 可用iterator进行迭代
+		○ 若将可变对象用作set元素，需小心
+			§ 有些set结构，会根据元素设置位置
+
+HashSet：
+散列存放
+	- 不能保证存储顺序
+	- 用HashMap进行存储
+		○ 双值存储，用PRESENT常量占位，e为map集合的key
+		○ Map.put(e.PRESENT)
+
+
+TreeSet：
+有序二叉树存储
+	- 用TreeMap存储
+	- 用iterator方法返回的迭代器是快速失败的
+		○ 安全失败：迭代的是备份
+
+
+Comparable
+
+*若在set（有序）集合里存自定义的对象，需要定义compareTo方法，设置排序规则
+	- 不存一样大的：return 0 不存
+
+
+
+Comparator：
+	- 未实现的对象
+            sort(T[], Comparator<? Super T>)
+
+
+
+Map集合
+	- 存储一个个的 键值对 数据
+	- 键（key）不可重复
+
+遍历map：*麻烦
+		○ 取出所有的键：data.keyset（）
+		○ 迭代key
+		○ 取值：
+		data.get（Object key）
+ 
+ 存储：
+	- Data.put（K key，V value）
+		○ 若添加操作产生了替换，return旧值
+	- putAll（Map<? Extends K, ? Extends V> m)
+
+删除（删除取出）：
+	- remove（）
+		○ 可return旧值，或null
+
+
+哈希表：
+对象数组 + 链表/红黑树
+	- 初始桶数量：16
+	- 散列因子：0.75（当75%桶中存有数据，扩容桶）
+	*JDK1.8：
+	
+	
+
+Map集合各子类区别分析：
+	- HashMap：线程不安全，效率高。不保证存储顺序
+	- Hashtable：线程安全，效率低
+	- ConcurrentHashMap：采用分段锁机制，保证线程安全，效率又比较高
+	- TreeMap：自动进行排序
+	- LinkedHashMap：能保证存储顺序的HashMap
+	
+JDK1.9 新特性：
+
+List/Set/Map
+返回包含任意数量元素的不可修改列表：
+	Data.of()
+
+	
+补充知识点：
+	1 << 4 即将1左移4位，即1000，即16
