@@ -1,0 +1,211 @@
+进程
+即软件，内存中运行的应用程序，每个进程都有一个独立的内存空间
+
+线程
+进程中的一个执行路径，共享一个内存空间
+	- 线程之间可以自由切换、并发执行
+
+	线程调度：
+		○ 分时调度
+		○ 抢占式调度
+
+同步与异步
+同步：排队执行，效率低但是安全
+异步：同时执行，效率高但是数据不安全
+
+并发与并行
+并发：多事件在同一个时间段内发生
+并行：多事件在同一个时刻发生（同时发生）
+
+
+线程Thread
+	1. 创建一个继承Thread的子类
+Public class Mythread extends Thread{
+
+	2. 创建run方法，即线程要执行的任务方法
+	Public void run(){
+		a. 新的执行路径，通过thread对象的start（）来启动任务
+
+	- 每个线程都有自己的栈空间，共用一份堆内存
+
+	常用方法：
+	- 休眠：sleep（long millis）
+	- 标记为daemon守护线程(最后一个用户线程结束，自动结束），或用户线程（自己决定自己的死亡时期）：
+		T1.setDaemon（boolean on）
+		
+		
+		
+实现implements Runnable
+	- 好处：
+		○ 通过创建任务，给线程分配的方式来实现的多线程，更适合多个线程同时执行相同任务的情况。
+		○ 避免单继承带来的局限性
+		○ 任务与线程本身是分离的，提高了程序的健壮性
+		○ 线程池技术，接受Runnable，不接受Thread
+1.创建一个任务对象
+MyRunnable r = new MyRunnable();
+2.创建一个线程，并为其分配一个任务
+Thread t = new Thread( r);
+3.执行这个线程
+T.start();
+
+
+线程的中断
+	1. 标记结束点：
+	T1.interrupt();
+	2. 进catch，再终止
+	return
+
+
+线程安全
+
+隐式锁
+解决方案1.同步代码块 synchronized
+	格式： 
+		创建一个对象
+		Synchronized(锁对象-即任何对象){}
+		
+		
+		
+解决方案2.同步方法
+	- 将synchronized修饰进方法
+		○ 排队执行该方法
+
+
+
+解决方案3. 显式锁
+- 创建Lock对象，再解锁ReentrantLock
+
+
+
+
+
+
+	公平锁：
+	参数为true，则是公平锁
+		○ 先来先得
+		Private Lock l = new ReentrantLock(true);
+		
+
+多线程通信问题
+	- 生产者与消费者
+		○ 目标：
+			§ 厨师做完一份饭，服务员端走一份
+		○ 解决方案：
+			§ 加标记，显示当前进度是做饭/端饭
+			
+			§ 当flag = true，厨师做饭
+			§ 厨师做完饭，唤醒服务员，睡着
+			
+			§ 当flag = false，服务员端饭
+			§ 服务员端完饭，唤醒厨师，睡着
+			
+			
+
+线程状态 Thread.State
+
+	NEW
+	- 尚未启动的状态
+
+	Runnable
+	- 执行的线程的状态
+	
+	Blocked
+	- 排队执行的过程
+	
+	Waiting
+	- 休眠，无限等待另一个线程执行特定的操作
+	
+	TimedWaiting
+	- 等待另一个线程，有时间限制
+	
+	Terminated
+	- 终止
+
+
+Java中的第三种线程实现方式：
+带返回值的线程Callable
+	- 可与主线程同时执行，也可主线程指派任务，return结果
+
+	使用流程：
+	1. 编写类，实现Callable接口，实现call方法
+	//Callable接口
+	Public interface Callable<V>{
+		V call() throws Exception;
+	}
+	2. 在主线程中，创建Callable对象
+	Callable<Integer> c = new MyCallable（）;
+	3. 创建FutureTask对象，并传入第一步编写的Callable类对象
+	FutureTask<Integer> future = new FutureTask<>(callable);
+	4. 通过Thread，启动线程
+	New Thread(future).start();
+
+	方法
+	- get（）：
+		如果调用，会等待线程A执行完毕，等待给定时间，再向主线程return结果
+	- isDone（）：
+		判断子线程是否执行完毕
+	- cancel（）：
+		取消子线程进程
+		- 若返回false，子线程已执行完毕
+
+
+线程池 ExecutorService
+容纳多个线程的容器，池中的线程可以反复使用，省去了频繁创建线程对象的操作，节省时间和资源
+	- 需合理设计线程池的长度
+
+	1. 缓存线程池（长度无限制）
+	- 判断线程池是否存在空闲线程
+	- 存在则使用
+	- 不存在，则创建线程，并放入线程池，然后使用
+	ExecutorService service = Executors.newCachedThreadPool();
+	Service.execute(new Runnable(){
+		Public void run(){
+		Xxx
+		}
+	});
+	
+	2. 定长线程池
+	- 判断线程池是否存在空闲线程
+	- 存在则使用
+	- 不存在，且线程池未满的情况下，创建线程，并放入线程池，然后使用
+	- 不存在，且线程池已满，等待空闲线程
+	ExecutorService service =Executors.newFixedThreadPool(2);
+	
+	3. 单线程线程池：
+	要求排队执行的任务
+	ExecutorService service =Executors.newSingleThreadExecutor();
+	
+	
+	4. 周期性任务定长线程池
+	定时执行，当某个时机触发时，自动执行某任务
+	ScheduledExecutorService service =Executors.newScheduledThreadPool(2);
+		a. 定时执行一次
+		参数一：定时执行的任务
+		参数二：时长数字
+		参数三：时长数字的时间单位，TimeUnit的常量指定
+		Service.schedule(new Runnable(){
+			Public void run(){
+				Xxx;
+			}
+		}, 5, TimeUnit.SECONDS);
+		b. 周期执行的任务
+		参数一：任务
+		参数二：延迟时长数字（第一次执行在什么时间以后）
+		参数三：周期时长数字（每隔多久执行一次）
+		参数四：时长数字的时间单位
+	
+		Service.scheduleAtFixedRate(){
+			Public void run(){
+				Xxx;
+			}
+		}, 5, 1, TimeUnit.SECONDS);
+		
+		
+Lambda表达式
+函数式编程思想
+	- 直接传入方法
+		○ 删除匿名内部类表达方式
+		○ 保留方法体，保留参数
+
+
+
