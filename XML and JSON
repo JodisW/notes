@@ -1,0 +1,96 @@
+XML
+可扩展标记语言 extensible Markup Language
+	- 具有平台无关性，是一门独立的标记语言
+	- XML是字符串，不是文件
+
+1. XML文档声明
+<?xml version="1.0" encoding="UTF-8"?> 
+
+2. 标记(元素/标签/节点) XML文档,由一个个的标记组成. 
+语法:
+标记名称 命名规则: 
+	- 名称区分大小写 
+	标记内容:
+	<name>李伟杰</name> 
+
+
+3. 一个XML文档中, 必须有且、仅允许有一个根标记. 
+正例: 
+<names> 
+<name>张三</name>
+ <name>李四</name> 
+</names> 
+
+
+4. 标记除了开始和结束 , 还有属性. 
+	- 属性值 必须被引号引住. 
+	<person id="10001" groupid="1"> 
+	
+	
+	
+	
+	
+CDATA
+是不应该由XML解析的文本数据
+	<![CDATA[" 开始，由 "]]> 
+	
+	
+	
+	
+
+
+
+JSON - JavaScript Object Notation
+
+格式：
+{ 
+	"name":"金苹果", 
+	"info":"种苹果"
+ } 
+
+
+将Java中的对象,快速的转换为 JSON格式的字符串. 
+将JSON格式的字符串, 转换为Java的对象. 
+
+
+Gson方法
+
+将对象 转 JSON字符串
+1. 引入JAR包 
+2. 创建要转换的对象
+3. 转换JSON字符串：
+String json = new Gson().toJSON(要转换的对象); 
+
+4. System.out.println(json); 
+
+
+将JSON字符串 转 对象 
+1. 定义JSON字符串
+String json = "{\"id\":1,\"name\":\"金苹果\",\"author\":\"李伟杰 
+\",\"info\":\"嘿嘿嘿嘿嘿嘿\",\"price\":198.0}";
+
+2. 调用Gson方法
+
+对象 = new Gson().fromJson(JSON字符串,对象类型.class); 
+
+
+
+FastJson
+对象 转 JSON字符串
+1. 引入JAR包 
+2. 创建要转换的对象
+3. 转换JSON字符串：
+String json=JSON.toJSONString(要转换的对象); 
+
+4. System.out.println(json); 
+
+
+将JSON字符串 转 对象 
+1. 定义JSON字符串
+String json = "{\"id\":1,\"name\":\"金苹果\",\"author\":\"李伟杰 
+\",\"info\":\"嘿嘿嘿嘿嘿嘿\",\"price\":198.0}";
+
+2. 调用Gson方法
+类型 对象名=JSON.parseObject(JSON字符串, 类型.class); 
+或 
+List<类型> list=JSON.parseArray(JSON字符串,类型.class); 
